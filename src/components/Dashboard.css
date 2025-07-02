@@ -372,6 +372,10 @@ tr:hover {
 /* User Dashboard */
 .welcome-section {
   margin-bottom: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 1rem;
 }
 
 .welcome-card {
@@ -380,6 +384,12 @@ tr:hover {
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   text-align: center;
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .welcome-icon {
@@ -395,8 +405,10 @@ tr:hover {
 .welcome-card p {
   color: #718096;
   line-height: 1.6;
+  max-width: 600px;
 }
 
+/* Responsive improvements */
 @media (max-width: 768px) {
   .header-content {
     padding: 0 1rem;
@@ -418,5 +430,14 @@ tr:hover {
 
   .devices-grid {
     grid-template-columns: 1fr;
+  }
+
+  .welcome-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .welcome-card p {
+    font-size: 1rem;
+    text-align: center;
   }
 }
