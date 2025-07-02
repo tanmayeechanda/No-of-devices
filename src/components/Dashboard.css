@@ -156,7 +156,7 @@ das table {
 
 th,
 td {
-  text-align: left;
+  text-align: center;
   padding: 1rem;
   width: 100%;
   border-bottom: 1px solid #e2e8f0;
