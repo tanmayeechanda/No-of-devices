@@ -1,0 +1,147 @@
+.landing-page {
+  position: relative;
+  z-index: 1;
+  color: white;
+  padding: 0px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.landing-page::before {
+  content: "";
+  position: absolute; /* Required for full coverage */
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-image: url("https://images.unsplash.com/photo-1532467411038-57680e3dc0f1?w=620&auto=format&fit=crop&q=60&ixlib=rb-4.1.0");
+  background-size: cover;
+  background-position: center;
+  opacity: 0.1;
+  z-index: -1;
+}
+
+.navbar {
+  margin: 0;
+  padding: 1rem 0;
+  background: rgba(238, 220, 196, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.nav-container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 40px;
+  font-weight: bolder;
+  color: hsl(219, 29%, 13%);
+}
+
+.logo-icon {
+  font-size: 1.8rem;
+}
+
+.nav-link {
+  font-size: 28px;
+  color: #8689a1;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+  background: rgba(133, 149, 192, 0.1);
+}
+
+.hero-section {
+  max-width: 800px;
+  margin: 0 auto;
+
+  text-align: center;
+}
+
+.hero-content h1 {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 0rem;
+  color: hsl(219, 29%, 13%);
+}
+
+.hero-content p {
+  font-size: 1.5rem;
+  color: #4d5a46;
+  margin-bottom: 3rem;
+  line-height: 1.6;
+  font-weight: 600;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 0.8rem 2rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1.5rem;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+}
+
+.btn-primary {
+  width: 225px;
+  background: #6e3e16;
+  border-color: #65480a;
+  color: white;
+}
+
+.btn-primary:hover {
+  color: white;
+  background: #9c5d27;
+  border-color: #9b661c;
+}
+
+.btn-secondary {
+  opacity: 1;
+  color: white;
+  width: 220px;
+  background: #6e3e16;
+  border-color: #65480a;
+}
+
+.btn-secondary:hover {
+  background: #9c5d27;
+  border-color: #9b661c;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .hero-content h1 {
+    font-size: 2.2rem;
+  }
+
+  .cta-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .btn {
+    width: 200px;
+  }
+}
