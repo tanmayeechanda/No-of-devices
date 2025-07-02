@@ -18,7 +18,7 @@ const UserDashboard = () => {
       });
       setDevice(res.data.device);
     } catch (err) {
-      console.log("No device assigned yet.");
+      console.log("No device assigned yet.", err.message);
     }
   };
 
