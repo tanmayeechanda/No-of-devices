@@ -10,6 +10,7 @@ const UserDashboard = () => {
   const [scanning, setScanning] = useState(false);
   const [message, setMessage] = useState("");
 
+  // Fetch device assigned to current user
   const fetchAssignedDevice = async () => {
     try {
       const res = await axios.get("/api/devices/assigned", {
@@ -25,6 +26,7 @@ const UserDashboard = () => {
     fetchAssignedDevice();
   }, []);
 
+  // Handle QR code scan
   const handleScan = async (result) => {
     if (!result) return;
     setScanning(false);
@@ -60,27 +62,36 @@ const UserDashboard = () => {
 
       <div className="dashboard-content">
         {device ? (
-          <div className="device-info">
-            <h2>Your Device</h2>
-            <img src={device.qrCode} alt="Assigned QR" width="200" />
-            <p>
-              <strong>Device Code:</strong> {device.code}
-            </p>
-            <p>
-              <strong>Device Name:</strong> {device.name}
-            </p>
-            <p>
-              <strong>Assigned To:</strong> {user.username}
-            </p>
-            <p>
-              <strong>Email:</strong> {user.email}
-            </p>
+          <div className="device-info-enhanced">
+            <div className="qr-section">
+              <img src={device.qrCode} alt="Assigned QR" className="qr-image" />
+            </div>
+            <div className="info-section">
+              <h2 className="device-title">📱 Your Device</h2>
+              <p>
+                <strong>Device Code:</strong> {device.code}
+              </p>
+              <p>
+                <strong>Device Name:</strong> {device.name}
+              </p>
+              <p>
+                <strong>Assigned To:</strong> {user.username}
+              </p>
+              <p>
+                <strong>Email:</strong> {user.email}
+              </p>
+            </div>
           </div>
         ) : (
           <>
-            <button className="scan-btn" onClick={() => setScanning(true)}>
+            <button
+              className="scan-btn"
+              onClick={() => setScanning(true)}
+              disabled={scanning}
+            >
               Scan a QR Code
             </button>
+
             {scanning && (
               <QrReader
                 constraints={{ facingMode: "environment" }}
@@ -88,6 +99,7 @@ const UserDashboard = () => {
                 containerStyle={{ width: "300px", marginTop: "1rem" }}
               />
             )}
+
             {message && <p className="scan-message">{message}</p>}
           </>
         )}
