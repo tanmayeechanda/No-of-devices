@@ -149,11 +149,6 @@
   text-align: center;
   color: #718096;
 }
-das table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
 table {
   width: 100%;
   border-collapse: collapse;
@@ -161,7 +156,7 @@ table {
 
 th,
 td {
-  text-align: center;
+  text-align: left;
   padding: 1rem;
   width: 100%;
   border-bottom: 1px solid #e2e8f0;
