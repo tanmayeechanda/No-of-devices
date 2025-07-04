@@ -29,7 +29,7 @@ const UserDashboard = () => {
 
   // Get user location
   const getLocation = () => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       if (!navigator.geolocation) return resolve(null);
       navigator.geolocation.getCurrentPosition(
         (pos) => {
@@ -105,6 +105,20 @@ const UserDashboard = () => {
               <p>
                 <strong>Email:</strong> {user.email}
               </p>
+              {device.location &&
+                device.location.latitude &&
+                device.location.longitude && (
+                  <p>
+                    <strong>Scanned Location:</strong> Lat{" "}
+                    {device.location.latitude}, Lng {device.location.longitude}
+                  </p>
+                )}
+              {device.assignedAt && (
+                <p>
+                  <strong>Scanned At:</strong>{" "}
+                  {new Date(device.assignedAt).toLocaleString()}
+                </p>
+              )}
             </div>
           </div>
         ) : askToScan ? (
