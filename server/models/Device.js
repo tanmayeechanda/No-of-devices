@@ -28,6 +28,20 @@ const deviceSchema = new mongoose.Schema({
     default: null,
     sparse: true,
   },
+  assignedAt: {
+    type: Date,
+    default: null,
+  },
+  location: {
+    latitude: {
+      type: Number,
+      default: null,
+    },
+    longitude: {
+      type: Number,
+      default: null,
+    },
+  },
   createdAt: {
     type: Date,
     default: Date.now,

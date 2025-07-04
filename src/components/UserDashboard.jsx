@@ -9,6 +9,7 @@ const UserDashboard = () => {
   const [device, setDevice] = useState(null);
   const [scanning, setScanning] = useState(false);
   const [message, setMessage] = useState("");
+  const [askToScan, setAskToScan] = useState(false);
 
   // Fetch device assigned to current user
   const fetchAssignedDevice = async () => {
@@ -26,15 +27,39 @@ const UserDashboard = () => {
     fetchAssignedDevice();
   }, []);
 
+  // Get user location
+  const getLocation = () => {
+    return new Promise((resolve, reject) => {
+      if (!navigator.geolocation) return resolve(null);
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          resolve({
+            latitude: pos.coords.latitude,
+            longitude: pos.coords.longitude,
+          });
+        },
+        () => resolve(null),
+        { timeout: 10000 }
+      );
+    });
+  };
+
   // Handle QR code scan
   const handleScan = async (result) => {
     if (!result) return;
     setScanning(false);
 
     try {
+      const location = await getLocation();
+      const timestamp = new Date().toISOString();
+
       const res = await axios.post(
         "/api/devices/assign",
-        { code: result },
+        {
+          code: result,
+          scannedAt: timestamp,
+          location,
+        },
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
@@ -82,14 +107,14 @@ const UserDashboard = () => {
               </p>
             </div>
           </div>
-        ) : (
+        ) : askToScan ? (
           <>
             <button
               className="scan-btn"
               onClick={() => setScanning(true)}
               disabled={scanning}
             >
-              Scan a QR Code
+              Start QR Scan
             </button>
 
             {scanning && (
@@ -102,6 +127,10 @@ const UserDashboard = () => {
 
             {message && <p className="scan-message">{message}</p>}
           </>
+        ) : (
+          <button className="scan-btn" onClick={() => setAskToScan(true)}>
+            Do you want to scan a QR code?
+          </button>
         )}
       </div>
     </div>
