@@ -36,8 +36,15 @@ const UserDashboard = () => {
             longitude: pos.coords.longitude,
           });
         },
-        () => resolve(null),
-        { timeout: 10000 }
+        (err) => {
+          console.warn("Geolocation failed:", err);
+          resolve(null);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 15000,
+          maximumAge: 0,
+        }
       );
     });
   };
@@ -48,7 +55,6 @@ const UserDashboard = () => {
 
     try {
       const location = await getLocation();
-      console.log("📍 Captured location:", location);
       const timestamp = new Date().toISOString();
       let address = null;
 
@@ -60,12 +66,7 @@ const UserDashboard = () => {
         );
         address = geoRes.data.results[0]?.formatted;
       }
-      console.log("📤 Sending to backend:", {
-        code: data.text || data,
-        scannedAt: timestamp,
-        location,
-        address,
-      });
+
       const res = await axios.post(
         "/api/devices/assign",
         {
@@ -157,19 +158,15 @@ const UserDashboard = () => {
             {device.location && (
               <div className="dashboard-card light-card">
                 <h3 className="card-title">Map</h3>
-                {device.location?.latitude && device.location?.longitude ? (
-                  <iframe
-                    title="Device Location Map"
-                    src={`https://www.google.com/maps?q=${device.location.latitude},${device.location.longitude}&z=15&output=embed`}
-                    width="100%"
-                    height="250"
-                    style={{ border: "none", borderRadius: "8px" }}
-                    allowFullScreen
-                    loading="lazy"
-                  ></iframe>
-                ) : (
-                  <p>📍 Location not available</p>
-                )}
+                <iframe
+                  title="Device Location Map"
+                  src={`https://www.google.com/maps?q=${device.location.latitude},${device.location.longitude}&z=15&output=embed`}
+                  width="100%"
+                  height="250"
+                  style={{ border: "none", borderRadius: "8px" }}
+                  allowFullScreen
+                  loading="lazy"
+                ></iframe>
               </div>
             )}
           </div>
