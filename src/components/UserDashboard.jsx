@@ -60,7 +60,12 @@ const UserDashboard = () => {
         );
         address = geoRes.data.results[0]?.formatted;
       }
-
+      console.log("📤 Sending to backend:", {
+        code: data.text || data,
+        scannedAt: timestamp,
+        location,
+        address,
+      });
       const res = await axios.post(
         "/api/devices/assign",
         {
