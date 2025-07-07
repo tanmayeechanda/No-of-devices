@@ -116,6 +116,7 @@ router.post(
       device.assignedAt = scannedAt || new Date();
       device.location = location || null;
       device.address = address || null;
+      console.log("📦 Saved to device:", device.location, device.address);
 
       await device.save();
 
