@@ -48,6 +48,7 @@ const UserDashboard = () => {
 
     try {
       const location = await getLocation();
+      console.log("📍 Captured location:", location);
       const timestamp = new Date().toISOString();
       let address = null;
 
