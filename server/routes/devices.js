@@ -6,7 +6,7 @@ import { authenticateToken, requireRole } from "../middleware/auth.js";
 
 const router = express.Router();
 
-// 📦 Generate devices (Normal Admin)
+// 🛠 Generate Devices — [Normal Admin only]
 router.post(
   "/generate",
   authenticateToken,
@@ -18,7 +18,7 @@ router.post(
 
       for (let i = 0; i < numberOfDevices; i++) {
         const deviceName = `Device-${Date.now()}-${i + 1}`;
-        const code = crypto.randomBytes(8).toString("hex").toUpperCase(); // 16 char code
+        const code = crypto.randomBytes(8).toString("hex").toUpperCase(); // 16-char
         const qrImage = await QRCode.toDataURL(code);
 
         const device = new Device({
@@ -32,17 +32,16 @@ router.post(
         devices.push(device);
       }
 
-      res.status(201).json({
-        message: `${numberOfDevices} devices generated successfully`,
-        devices,
-      });
+      res
+        .status(201)
+        .json({ message: `${numberOfDevices} devices generated`, devices });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
   }
 );
 
-// 🔍 Get all devices (Super Admin)
+// 📄 Get All Devices — [Super Admin only]
 router.get(
   "/",
   authenticateToken,
@@ -60,15 +59,15 @@ router.get(
   }
 );
 
-// ❌ Delete a device (Super Admin)
+// ❌ Delete a Device by ID — [Super Admin only]
 router.delete(
   "/:id",
   authenticateToken,
   requireRole(["superadmin"]),
   async (req, res) => {
     try {
-      const device = await Device.findByIdAndDelete(req.params.id);
-      if (!device) {
+      const deleted = await Device.findByIdAndDelete(req.params.id);
+      if (!deleted) {
         return res.status(404).json({ message: "Device not found" });
       }
       res.json({ message: "Device deleted successfully" });
@@ -78,37 +77,32 @@ router.delete(
   }
 );
 
-// ✅ Assign QR to user (with location + timestamp)
+// ✅ Assign a Device to User (via QR) — [User only]
 router.post(
   "/assign",
   authenticateToken,
   requireRole(["user"]),
   async (req, res) => {
-    const { code, scannedAt, location } = req.body;
+    const { code, scannedAt, location, address } = req.body;
 
     if (!code) {
       return res.status(400).json({ message: "QR code is required" });
     }
 
     try {
-      // Step 1: Check if user already has a device assigned
+      // Check if already assigned
       const existing = await Device.findOne({ assignedTo: req.user.userId });
       if (existing) {
         return res
           .status(400)
-          .json({
-            message: "You have already scanned and been assigned a device.",
-          });
+          .json({ message: "You already have a device assigned" });
       }
 
-      // Step 2: Check if QR code exists
       const device = await Device.findOne({ code });
-
       if (!device) {
         return res.status(404).json({ message: "QR code not found" });
       }
 
-      // Step 3: Ensure it's not assigned to another user
       if (
         device.assignedTo &&
         device.assignedTo.toString() !== req.user.userId
@@ -118,10 +112,10 @@ router.post(
           .json({ message: "QR code already assigned to another user" });
       }
 
-      // Step 4: Assign QR to user
       device.assignedTo = req.user.userId;
       device.assignedAt = scannedAt || new Date();
       device.location = location || null;
+      device.address = address || null;
 
       await device.save();
 
@@ -132,7 +126,7 @@ router.post(
   }
 );
 
-// 📦 Get assigned device of the logged-in user
+// 📦 Get Assigned Device of Logged-in User — [User only]
 router.get(
   "/assigned",
   authenticateToken,
@@ -140,11 +134,9 @@ router.get(
   async (req, res) => {
     try {
       const device = await Device.findOne({ assignedTo: req.user.userId });
-
       if (!device) {
         return res.status(404).json({ message: "No device assigned yet" });
       }
-
       res.json({ device });
     } catch (error) {
       res.status(500).json({ message: error.message });

@@ -6,9 +6,9 @@ import authRoutes from "./routes/auth.js";
 import deviceRoutes from "./routes/devices.js";
 import adminRoutes from "./routes/admin.js";
 
+// Load environment variables from .env file
 dotenv.config();
 
-const process = { env: {} };
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -25,15 +25,17 @@ mongoose
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
-// Routes
+// API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/devices", deviceRoutes);
 app.use("/api/admin", adminRoutes);
 
+// Root Route
 app.get("/", (req, res) => {
   res.json({ message: "Device Management API is running!" });
 });
 
+// Start Server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
