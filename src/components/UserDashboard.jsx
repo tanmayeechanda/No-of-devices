@@ -157,15 +157,19 @@ const UserDashboard = () => {
             {device.location && (
               <div className="dashboard-card light-card">
                 <h3 className="card-title">Map</h3>
-                <iframe
-                  title="Device Location Map"
-                  src={`https://www.google.com/maps?q=${device.location.latitude},${device.location.longitude}&z=15&output=embed`}
-                  width="100%"
-                  height="250"
-                  style={{ border: "none", borderRadius: "8px" }}
-                  allowFullScreen
-                  loading="lazy"
-                ></iframe>
+                {device.location?.latitude && device.location?.longitude ? (
+                  <iframe
+                    title="Device Location Map"
+                    src={`https://www.google.com/maps?q=${device.location.latitude},${device.location.longitude}&z=15&output=embed`}
+                    width="100%"
+                    height="250"
+                    style={{ border: "none", borderRadius: "8px" }}
+                    allowFullScreen
+                    loading="lazy"
+                  ></iframe>
+                ) : (
+                  <p>📍 Location not available</p>
+                )}
               </div>
             )}
           </div>
