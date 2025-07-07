@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { QrReader } from "@blackbox-vision/react-qr-reader";
+import QrScanner from "react-qr-scanner";
 import axios from "axios";
 import "./Dashboard.css";
 
@@ -42,29 +42,28 @@ const UserDashboard = () => {
     });
   };
 
-  const handleScan = async (result) => {
-    if (!result) return;
+  const handleScan = async (data) => {
+    if (!data) return;
     setScanning(false);
 
     try {
       const location = await getLocation();
       const timestamp = new Date().toISOString();
-
       let address = null;
+
       if (location) {
         const geoRes = await axios.get(
           `https://api.opencagedata.com/geocode/v1/json?q=${
             location.latitude
           }+${location.longitude}&key=${import.meta.env.VITE_OPENCAGE_API_KEY}`
         );
-
         address = geoRes.data.results[0]?.formatted;
       }
 
       const res = await axios.post(
         "/api/devices/assign",
         {
-          code: result,
+          code: data.text || data,
           scannedAt: timestamp,
           location,
           address,
@@ -73,12 +72,19 @@ const UserDashboard = () => {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
       );
+
       setDevice(res.data.device);
-      setMessage("QR code successfully assigned!");
+      setMessage("✅ QR code successfully assigned!");
     } catch (err) {
       console.error(err);
-      setMessage(err.response?.data?.message || "Failed to assign QR code");
+      setMessage(err.response?.data?.message || "❌ Failed to assign QR code");
     }
+  };
+
+  const handleError = (err) => {
+    console.error("QR Scan error:", err);
+    setMessage("❌ Error accessing camera or scanning QR");
+    setScanning(false);
   };
 
   return (
@@ -168,11 +174,16 @@ const UserDashboard = () => {
             </button>
 
             {scanning && (
-              <QrReader
-                constraints={{ facingMode: "environment" }}
-                onResult={(result) => handleScan(result?.text)}
-                containerStyle={{ width: "300px", marginTop: "1rem" }}
-              />
+              <div
+                style={{ marginTop: "1rem", width: "100%", maxWidth: "400px" }}
+              >
+                <QrScanner
+                  delay={300}
+                  style={{ width: "100%" }}
+                  onError={handleError}
+                  onScan={handleScan}
+                />
+              </div>
             )}
 
             {message && <p className="scan-message">{message}</p>}
