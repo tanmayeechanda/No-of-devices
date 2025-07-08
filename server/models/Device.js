@@ -12,7 +12,7 @@ const deviceSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-      default: () => crypto.randomBytes(8).toString("hex").toUpperCase(), // 16-char unique code
+      default: () => crypto.randomBytes(8).toString("hex").toUpperCase(), // 16-char unique
     },
     qrCode: {
       type: String,
@@ -27,7 +27,7 @@ const deviceSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       default: null,
-      index: true, // Faster queries on assigned devices
+      index: true,
     },
     assignedAt: {
       type: Date,
@@ -36,10 +36,14 @@ const deviceSchema = new mongoose.Schema(
     location: {
       latitude: {
         type: Number,
+        min: -90,
+        max: 90,
         default: null,
       },
       longitude: {
         type: Number,
+        min: -180,
+        max: 180,
         default: null,
       },
     },
@@ -54,8 +58,11 @@ const deviceSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true, // Adds createdAt and updatedAt fields automatically
+    timestamps: true, // adds createdAt and updatedAt
   }
 );
+
+// 📈 Compound index for better performance on queries
+deviceSchema.index({ assignedTo: 1, assignedAt: -1 });
 
 export default mongoose.model("Device", deviceSchema);
