@@ -6,7 +6,9 @@ import { authenticateToken, requireRole } from "../middleware/auth.js";
 
 const router = express.Router();
 
-// 🛠 Generate Devices — [Normal Admin only]
+/**
+ * 🔧 Generate Devices [Normal Admin]
+ */
 router.post(
   "/generate",
   authenticateToken,
@@ -42,7 +44,9 @@ router.post(
   }
 );
 
-// 📄 Get All Devices — [Super Admin only]
+/**
+ * 📄 Get All Devices [Super Admin]
+ */
 router.get(
   "/",
   authenticateToken,
@@ -60,7 +64,9 @@ router.get(
   }
 );
 
-// ❌ Delete a Device by ID — [Super Admin only]
+/**
+ * ❌ Delete a Device [Super Admin]
+ */
 router.delete(
   "/:id",
   authenticateToken,
@@ -78,7 +84,9 @@ router.delete(
   }
 );
 
-// ✅ Assign a Device to User (via QR/code/file) — [User only]
+/**
+ * ✅ Assign a Device to the Logged-in User [User]
+ */
 router.post(
   "/assign",
   authenticateToken,
@@ -92,21 +100,32 @@ router.post(
 
     try {
       const device = await Device.findOne({ code });
+
       if (!device) {
         return res.status(404).json({ message: "QR code not found" });
       }
 
-      // Prevent assigning to other users
+      // Case 1: Already assigned to another user
       if (
         device.assignedTo &&
         device.assignedTo.toString() !== req.user.userId
       ) {
-        return res.status(400).json({
-          message: "QR code already assigned to another user",
-        });
+        return res
+          .status(400)
+          .json({ message: "QR code already assigned to another user" });
       }
 
-      // Allow multiple devices per user
+      // Case 2: Already assigned to this user → no duplication
+      if (
+        device.assignedTo &&
+        device.assignedTo.toString() === req.user.userId
+      ) {
+        return res
+          .status(200)
+          .json({ message: "Already assigned to you", device });
+      }
+
+      // Assign the device to the user
       device.assignedTo = req.user.userId;
       device.assignedAt = scannedAt || new Date();
       device.location = location || null;
@@ -121,7 +140,9 @@ router.post(
   }
 );
 
-// 📦 Get All Assigned Devices of Logged-in User — [User only]
+/**
+ * 📦 Get All Assigned Devices for Current User [User]
+ */
 router.get(
   "/assigned",
   authenticateToken,
@@ -129,7 +150,7 @@ router.get(
   async (req, res) => {
     try {
       const devices = await Device.find({ assignedTo: req.user.userId });
-      res.json({ devices });
+      res.json({ devices }); // Array of all devices assigned to this user
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
