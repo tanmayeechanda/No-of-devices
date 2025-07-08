@@ -519,3 +519,17 @@ tr:hover {
     width: 90%;
   }
 }
+
+.download-btn {
+  margin-top: 0.5rem;
+  padding: 5px 10px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.download-btn:hover {
+  background-color: #388e3c;
+}
