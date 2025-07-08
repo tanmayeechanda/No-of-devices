@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
 import QRCode from "qrcode.react";
 import "./Dashboard.css";
@@ -8,6 +8,7 @@ const NormalAdminDashboard = () => {
   const [generatedDevices, setGeneratedDevices] = useState([]);
   const [loading, setLoading] = useState(false);
   const { user, logout } = useAuth();
+  const canvasRefs = useRef({});
 
   const handleGenerateDevices = async (e) => {
     e.preventDefault();
@@ -46,6 +47,15 @@ const NormalAdminDashboard = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDownloadQR = (code) => {
+    const canvas = canvasRefs.current[code];
+    const url = canvas.toDataURL("image/png");
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${code}.png`;
+    link.click();
   };
 
   return (
@@ -109,8 +119,16 @@ const NormalAdminDashboard = () => {
                         size={100}
                         level="M"
                         includeMargin={true}
+                        renderAs="canvas"
+                        ref={(el) => (canvasRefs.current[device.code] = el)}
                       />
                     </div>
+                    <button
+                      onClick={() => handleDownloadQR(device.code)}
+                      className="download-btn"
+                    >
+                      Download QR
+                    </button>
                   </div>
 
                   <div className="device-info">
