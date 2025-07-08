@@ -16,7 +16,10 @@ const UserDashboard = () => {
       const res = await axios.get("/api/devices/assigned", {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
-      setDevices([res.data.device]);
+      const deviceArray = Array.isArray(res.data.device)
+        ? res.data.device
+        : [res.data.device];
+      setDevices(deviceArray);
     } catch (err) {
       console.log("No devices assigned yet.", err.message);
     }
@@ -70,7 +73,7 @@ const UserDashboard = () => {
         }
       );
 
-      setDevices([res.data.device]);
+      setDevices((prev) => [...prev, res.data.device]);
       setMessage("✅ QR code successfully assigned!");
     } catch (err) {
       console.error(err);
@@ -85,22 +88,13 @@ const UserDashboard = () => {
     }
   };
 
-  const handleFileUpload = (e) => {
+  const handleFileUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = (event) => {
-      const result = event.target.result?.trim();
-      if (result) {
-        assignDevice(result);
-      } else {
-        setMessage("❌ File is empty or unreadable");
-      }
-    };
-    reader.onerror = (err) => {
-      console.error("File reading error", err);
-      setMessage("❌ Failed to read the file");
+    reader.onload = () => {
+      assignDevice(reader.result.trim());
     };
     reader.readAsText(file);
   };
@@ -110,13 +104,12 @@ const UserDashboard = () => {
   };
 
   return (
-    <div className="dashboard">
-      {/* Header */}
+    <div className="hboard">
       <header className="dashboard-header">
         <div className="header-content">
-          <h1>UserDashboard</h1>
+          <h1>👤 User Dashboard</h1>
           <div className="user-info">
-            <span>{user.username}</span>
+            <span>{user?.username}</span>
             <button onClick={logout} className="logout-btn">
               Logout
             </button>
@@ -124,30 +117,30 @@ const UserDashboard = () => {
         </div>
       </header>
 
-      {/* Welcome Section */}
-      <div className="welcome-section">
-        <div className="welcome-card">
-          <p>
-            Welcome <strong>{user.username}</strong> to Addwise Tech’s
-            role-based device generation system
-          </p>
-        </div>
-      </div>
-
-      {/* Buttons Row */}
-      <div className="dashboard-cards three-columns">
-        {/* QR Scanner */}
+      <div className="dashboard-content">
         <div className="dashboard-card">
+          <h3 className="card-title">Assign Device</h3>
+          <input
+            type="text"
+            value={manualCode}
+            onChange={(e) => setManualCode(e.target.value)}
+            placeholder="Enter 16-digit code manually"
+          />
+          <button onClick={handleManualSubmit}>Assign by Code</button>
+
+          <input type="file" accept=".txt" onChange={handleFileUpload} />
+
           <button
             className="scan-btn"
             onClick={() => setScanning(true)}
             disabled={scanning}
           >
-            Scan QR
+            Start QR Scan
           </button>
+
           {scanning && (
             <div
-              style={{ marginTop: "1rem", width: "100%", maxWidth: "300px" }}
+              style={{ marginTop: "1rem", width: "100%", maxWidth: "400px" }}
             >
               <QrScanner
                 delay={300}
@@ -160,92 +153,58 @@ const UserDashboard = () => {
               />
             </div>
           )}
+
+          {message && <p className="scan-message">{message}</p>}
         </div>
 
-        {/* File Upload */}
-        <div className="dashboard-card">
-          <label htmlFor="fileUpload" className="scan-btn">
-            Choose File
-          </label>
-          <input
-            id="fileUpload"
-            type="file"
-            accept=".txt"
-            onChange={handleFileUpload}
-            style={{ display: "none" }}
-          />
-        </div>
-
-        {/* Manual Code Input */}
-        <div className="dashboard-card">
-          <input
-            type="text"
-            className="form-group-input"
-            value={manualCode}
-            onChange={(e) => setManualCode(e.target.value)}
-            placeholder="Enter the 16-digit code"
-            style={{ marginBottom: "1rem", padding: "0.5rem", width: "100%" }}
-          />
-          <button onClick={handleManualSubmit} className="scan-btn">
-            Assign by code
-          </button>
+        <div className="dashboard-cards">
+          {devices.map((device, index) => (
+            <div key={device.code || index} className="dashboard-card">
+              <h3 className="card-title">Device Info</h3>
+              <p>
+                <strong>Device Code:</strong> {device.code}
+              </p>
+              <p>
+                <strong>Device Name:</strong> {device.name}
+              </p>
+              <p>
+                <strong>Assigned To:</strong> {user?.username}
+              </p>
+              <p>
+                <strong>Email:</strong> {user?.email}
+              </p>
+              {device.location?.latitude && (
+                <p>
+                  <strong>Scanned Location:</strong> Lat{" "}
+                  {device.location.latitude}, Lng {device.location.longitude}
+                </p>
+              )}
+              {device.assignedAt && (
+                <p>
+                  <strong>Scanned At:</strong>{" "}
+                  {new Date(device.assignedAt).toLocaleString()}
+                </p>
+              )}
+              {device.address && (
+                <p>
+                  <strong>📍 Address:</strong> {device.address}
+                </p>
+              )}
+              {device.location?.latitude && (
+                <iframe
+                  title="Device Location Map"
+                  src={`https://www.google.com/maps?q=${device.location.latitude},${device.location.longitude}&z=15&output=embed`}
+                  width="100%"
+                  height="250"
+                  style={{ border: "none", borderRadius: "8px" }}
+                  allowFullScreen
+                  loading="lazy"
+                ></iframe>
+              )}
+            </div>
+          ))}
         </div>
       </div>
-
-      {/* Scan Message */}
-      {message && <p className="scan-message">{message}</p>}
-
-      {/* Assigned Device Section */}
-      {devices.length > 0 && (
-        <div className="dashboard-cards three-columns">
-          {/* QR Code */}
-          <div className="dashboard-card">
-            <h3 className="card-title">QR code</h3>
-            <div className="qr-container">
-              <img src={devices[0].qrCode} alt="QR Code" className="qr-full" />
-            </div>
-          </div>
-
-          {/* User Details */}
-          <div className="dashboard-card">
-            <h3 className="card-title">User details</h3>
-            <p>
-              <strong>Device Code:</strong> {devices[0].code}
-            </p>
-            <p>
-              <strong>Device Name:</strong> {devices[0].name}
-            </p>
-            <p>
-              <strong>Email:</strong> {user.email}
-            </p>
-            <p>
-              <strong>Assigned At:</strong>{" "}
-              {new Date(devices[0].assignedAt).toLocaleString()}
-            </p>
-            <p>
-              <strong>📍 Address:</strong> {devices[0].address}
-            </p>
-          </div>
-
-          {/* Map */}
-          <div className="dashboard-card">
-            <h3 className="card-title">Map</h3>
-            {devices[0].location?.latitude && devices[0].location?.longitude ? (
-              <iframe
-                title="Device Location"
-                src={`https://www.google.com/maps?q=${devices[0].location.latitude},${devices[0].location.longitude}&z=15&output=embed`}
-                width="100%"
-                height="250"
-                style={{ border: "none", borderRadius: "8px" }}
-                allowFullScreen
-                loading="lazy"
-              ></iframe>
-            ) : (
-              <p>No location available</p>
-            )}
-          </div>
-        </div>
-      )}
     </div>
   );
 };
