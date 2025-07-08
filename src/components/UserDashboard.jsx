@@ -10,6 +10,7 @@ const UserDashboard = () => {
   const [scanning, setScanning] = useState(false);
   const [message, setMessage] = useState("");
   const [manualCode, setManualCode] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const fetchAssignedDevices = async () => {
     try {
@@ -46,18 +47,30 @@ const UserDashboard = () => {
   };
 
   const assignDevice = async (code) => {
+    if (devices.length > 0) {
+      setMessage("⚠️ A device is already assigned to you.");
+      return;
+    }
+
+    setLoading(true);
     try {
       const location = await getLocation();
       const timestamp = new Date().toISOString();
       let address = null;
 
       if (location) {
-        const geoRes = await axios.get(
-          `https://api.opencagedata.com/geocode/v1/json?q=${
-            location.latitude
-          }+${location.longitude}&key=${import.meta.env.VITE_OPENCAGE_API_KEY}`
-        );
-        address = geoRes.data.results[0]?.formatted;
+        try {
+          const geoRes = await axios.get(
+            `https://api.opencagedata.com/geocode/v1/json?q=${
+              location.latitude
+            }+${location.longitude}&key=${
+              import.meta.env.VITE_OPENCAGE_API_KEY
+            }`
+          );
+          address = geoRes.data.results[0]?.formatted;
+        } catch (geoError) {
+          console.warn("Failed to resolve address:", geoError.message);
+        }
       }
 
       const res = await axios.post(
@@ -78,13 +91,15 @@ const UserDashboard = () => {
         setMessage("✅ QR code successfully assigned!");
       }
     } catch (err) {
-      console.error(err);
+      console.error("Assignment error:", err.response || err.message || err);
       setMessage(err.response?.data?.message || "❌ Failed to assign QR code");
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleScan = (data) => {
-    if (data && data.text) {
+    if (data?.text && !loading) {
       setScanning(false);
       assignDevice(data.text);
     }
@@ -111,14 +126,16 @@ const UserDashboard = () => {
   };
 
   const handleManualSubmit = () => {
-    if (manualCode.trim()) assignDevice(manualCode.trim());
+    if (manualCode.trim()) {
+      assignDevice(manualCode.trim());
+    }
   };
 
   return (
     <div className="dashboard">
       <header className="dashboard-header">
         <div className="header-content">
-          <h1>UserDashboard</h1>
+          <h1>User Dashboard</h1>
           <div className="user-info">
             <span>{user?.username}</span>
             <button onClick={logout} className="logout-btn">
@@ -142,7 +159,7 @@ const UserDashboard = () => {
           <button
             className="scan-btn"
             onClick={() => setScanning(true)}
-            disabled={scanning}
+            disabled={scanning || loading}
           >
             Scan QR
           </button>
@@ -173,6 +190,7 @@ const UserDashboard = () => {
             accept=".txt"
             onChange={handleFileUpload}
             style={{ display: "none" }}
+            disabled={loading}
           />
         </div>
 
@@ -184,13 +202,19 @@ const UserDashboard = () => {
             onChange={(e) => setManualCode(e.target.value)}
             placeholder="Enter the 16-digit code"
             style={{ marginBottom: "1rem", padding: "0.5rem", width: "100%" }}
+            disabled={loading}
           />
-          <button onClick={handleManualSubmit} className="scan-btn">
+          <button
+            onClick={handleManualSubmit}
+            className="scan-btn"
+            disabled={loading}
+          >
             Assign by code
           </button>
         </div>
       </div>
 
+      {loading && <p className="scan-message">⏳ Assigning device...</p>}
       {message && <p className="scan-message">{message}</p>}
 
       {devices.length > 0 && (
