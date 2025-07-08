@@ -32,9 +32,10 @@ router.post(
         devices.push(device);
       }
 
-      res
-        .status(201)
-        .json({ message: `${numberOfDevices} devices generated`, devices });
+      res.status(201).json({
+        message: `${numberOfDevices} devices generated`,
+        devices,
+      });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
@@ -77,7 +78,7 @@ router.delete(
   }
 );
 
-// ✅ Assign a Device to User (via QR) — [User only]
+// ✅ Assign a Device to User (via QR/code/file) — [User only]
 router.post(
   "/assign",
   authenticateToken,
@@ -90,33 +91,26 @@ router.post(
     }
 
     try {
-      // Check if already assigned
-      const existing = await Device.findOne({ assignedTo: req.user.userId });
-      if (existing) {
-        return res
-          .status(400)
-          .json({ message: "You already have a device assigned" });
-      }
-
       const device = await Device.findOne({ code });
       if (!device) {
         return res.status(404).json({ message: "QR code not found" });
       }
 
+      // Prevent assigning to other users
       if (
         device.assignedTo &&
         device.assignedTo.toString() !== req.user.userId
       ) {
-        return res
-          .status(400)
-          .json({ message: "QR code already assigned to another user" });
+        return res.status(400).json({
+          message: "QR code already assigned to another user",
+        });
       }
 
+      // Allow multiple devices per user
       device.assignedTo = req.user.userId;
       device.assignedAt = scannedAt || new Date();
       device.location = location || null;
       device.address = address || null;
-      console.log("📦 Saved to device:", device.location, device.address);
 
       await device.save();
 
@@ -127,18 +121,15 @@ router.post(
   }
 );
 
-// 📦 Get Assigned Device of Logged-in User — [User only]
+// 📦 Get All Assigned Devices of Logged-in User — [User only]
 router.get(
   "/assigned",
   authenticateToken,
   requireRole(["user"]),
   async (req, res) => {
     try {
-      const device = await Device.findOne({ assignedTo: req.user.userId });
-      if (!device) {
-        return res.status(404).json({ message: "No device assigned yet" });
-      }
-      res.json({ device });
+      const devices = await Device.find({ assignedTo: req.user.userId });
+      res.json({ devices });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
