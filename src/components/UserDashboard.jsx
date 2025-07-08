@@ -16,9 +16,12 @@ const UserDashboard = () => {
       const res = await axios.get("/api/devices/assigned", {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
-      setDevices([res.data.device]);
+      if (res.data.device) {
+        setDevices([res.data.device]);
+      }
     } catch (err) {
       console.log("No devices assigned yet.", err.message);
+      setDevices([]);
     }
   };
 
@@ -70,8 +73,10 @@ const UserDashboard = () => {
         }
       );
 
-      setDevices([res.data.device]);
-      setMessage("✅ QR code successfully assigned!");
+      if (res.data.device) {
+        setDevices([res.data.device]);
+        setMessage("✅ QR code successfully assigned!");
+      }
     } catch (err) {
       console.error(err);
       setMessage(err.response?.data?.message || "❌ Failed to assign QR code");
@@ -79,9 +84,9 @@ const UserDashboard = () => {
   };
 
   const handleScan = (data) => {
-    if (data) {
+    if (data && data.text) {
       setScanning(false);
-      assignDevice(data.text || data);
+      assignDevice(data.text);
     }
   };
 
@@ -111,12 +116,11 @@ const UserDashboard = () => {
 
   return (
     <div className="dashboard">
-      {/* Header */}
       <header className="dashboard-header">
         <div className="header-content">
           <h1>UserDashboard</h1>
           <div className="user-info">
-            <span>{user.username}</span>
+            <span>{user?.username}</span>
             <button onClick={logout} className="logout-btn">
               Logout
             </button>
@@ -124,19 +128,16 @@ const UserDashboard = () => {
         </div>
       </header>
 
-      {/* Welcome Section */}
       <div className="welcome-section">
         <div className="welcome-card">
           <p>
-            Welcome <strong>{user.username}</strong> to Addwise Tech’s
+            Welcome <strong>{user?.username}</strong> to Addwise Tech’s
             role-based device generation system
           </p>
         </div>
       </div>
 
-      {/* Buttons Row */}
       <div className="dashboard-cards three-columns">
-        {/* QR Scanner */}
         <div className="dashboard-card">
           <button
             className="scan-btn"
@@ -162,7 +163,6 @@ const UserDashboard = () => {
           )}
         </div>
 
-        {/* File Upload */}
         <div className="dashboard-card">
           <label htmlFor="fileUpload" className="scan-btn">
             Choose File
@@ -176,7 +176,6 @@ const UserDashboard = () => {
           />
         </div>
 
-        {/* Manual Code Input */}
         <div className="dashboard-card">
           <input
             type="text"
@@ -192,13 +191,10 @@ const UserDashboard = () => {
         </div>
       </div>
 
-      {/* Scan Message */}
       {message && <p className="scan-message">{message}</p>}
 
-      {/* Assigned Device Section */}
       {devices.length > 0 && (
         <div className="dashboard-cards three-columns">
-          {/* QR Code */}
           <div className="dashboard-card">
             <h3 className="card-title">QR code</h3>
             <div className="qr-container">
@@ -206,7 +202,6 @@ const UserDashboard = () => {
             </div>
           </div>
 
-          {/* User Details */}
           <div className="dashboard-card">
             <h3 className="card-title">User details</h3>
             <p>
@@ -216,18 +211,18 @@ const UserDashboard = () => {
               <strong>Device Name:</strong> {devices[0].name}
             </p>
             <p>
-              <strong>Email:</strong> {user.email}
+              <strong>Email:</strong> {user?.email}
             </p>
             <p>
               <strong>Assigned At:</strong>{" "}
               {new Date(devices[0].assignedAt).toLocaleString()}
             </p>
             <p>
-              <strong>📍 Address:</strong> {devices[0].address}
+              <strong>📍 Address:</strong>{" "}
+              {devices[0].address || "Not available"}
             </p>
           </div>
 
-          {/* Map */}
           <div className="dashboard-card">
             <h3 className="card-title">Map</h3>
             {devices[0].location?.latitude && devices[0].location?.longitude ? (
