@@ -6,24 +6,26 @@ import "./Dashboard.css";
 
 const UserDashboard = () => {
   const { user, logout } = useAuth();
-  const [device, setDevice] = useState(null);
+  const [devices, setDevices] = useState([]);
   const [scanning, setScanning] = useState(false);
   const [message, setMessage] = useState("");
   const [askToScan, setAskToScan] = useState(false);
+  const [manualCode, setManualCode] = useState("");
+  const [fileData, setFileData] = useState(null);
 
-  const fetchAssignedDevice = async () => {
+  const fetchAssignedDevices = async () => {
     try {
       const res = await axios.get("/api/devices/assigned", {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
-      setDevice(res.data.device);
+      setDevices(res.data.devices);
     } catch (err) {
-      console.log("No device assigned yet.", err.message);
+      console.log("No devices assigned yet.", err.message);
     }
   };
 
   useEffect(() => {
-    fetchAssignedDevice();
+    fetchAssignedDevices();
   }, []);
 
   const getLocation = () => {
@@ -36,23 +38,13 @@ const UserDashboard = () => {
             longitude: pos.coords.longitude,
           });
         },
-        (err) => {
-          console.warn("Geolocation failed:", err);
-          resolve(null);
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 15000,
-          maximumAge: 0,
-        }
+        () => resolve(null),
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
       );
     });
   };
 
-  const handleScan = async (data) => {
-    if (!data) return;
-    setScanning(false);
-
+  const assignDevice = async (code) => {
     try {
       const location = await getLocation();
       const timestamp = new Date().toISOString();
@@ -70,7 +62,7 @@ const UserDashboard = () => {
       const res = await axios.post(
         "/api/devices/assign",
         {
-          code: data.text || data,
+          code,
           scannedAt: timestamp,
           location,
           address,
@@ -80,7 +72,7 @@ const UserDashboard = () => {
         }
       );
 
-      setDevice(res.data.device);
+      setDevices((prev) => [...prev, res.data.device]);
       setMessage("✅ QR code successfully assigned!");
     } catch (err) {
       console.error(err);
@@ -88,10 +80,25 @@ const UserDashboard = () => {
     }
   };
 
-  const handleError = (err) => {
-    console.error("QR Scan error:", err);
-    setMessage("❌ Error accessing camera or scanning QR");
-    setScanning(false);
+  const handleScan = (data) => {
+    if (data) {
+      setScanning(false);
+      assignDevice(data.text || data);
+    }
+  };
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      assignDevice(reader.result.trim());
+    };
+    reader.readAsText(file);
+  };
+
+  const handleManualSubmit = () => {
+    if (manualCode.trim()) assignDevice(manualCode.trim());
   };
 
   return (
@@ -109,96 +116,93 @@ const UserDashboard = () => {
       </header>
 
       <div className="dashboard-content">
-        {device ? (
-          <div className="dashboard-cards three-columns">
-            <div className="dashboard-card light-card">
-              <h3 className="card-title">QR Code</h3>
-              <div className="qr-container">
-                <img
-                  src={device.qrCode}
-                  alt="Assigned QR"
-                  className="qr-full"
-                />
-              </div>
-            </div>
+        <div className="dashboard-card light-card">
+          <h3 className="card-title">Assign Device</h3>
+          <input
+            type="text"
+            value={manualCode}
+            onChange={(e) => setManualCode(e.target.value)}
+            placeholder="Enter 16-digit code manually"
+          />
+          <button onClick={handleManualSubmit}>Assign by Code</button>
 
-            <div className="dashboard-card light-card">
-              <h3 className="card-title">Device Info</h3>
-              <p>
-                <strong>Device Code:</strong> {device.code}
-              </p>
-              <p>
-                <strong>Device Name:</strong> {device.name}
-              </p>
-              <p>
-                <strong>Assigned To:</strong> {user.username}
-              </p>
-              <p>
-                <strong>Email:</strong> {user.email}
-              </p>
-              {device.location?.latitude && device.location?.longitude && (
-                <p>
-                  <strong>Scanned Location:</strong> Lat{" "}
-                  {device.location.latitude}, Lng {device.location.longitude}
-                </p>
-              )}
-              {device.assignedAt && (
-                <p>
-                  <strong>Scanned At:</strong>{" "}
-                  {new Date(device.assignedAt).toLocaleString()}
-                </p>
-              )}
-              {device.address && (
-                <p>
-                  <strong>📍 Address:</strong> {device.address}
-                </p>
-              )}
-            </div>
+          <input type="file" accept=".txt" onChange={handleFileUpload} />
 
-            {device.location && (
-              <div className="dashboard-card light-card">
-                <h3 className="card-title">Map</h3>
-                <iframe
-                  title="Device Location Map"
-                  src={`https://www.google.com/maps?q=${device.location.latitude},${device.location.longitude}&z=15&output=embed`}
-                  width="100%"
-                  height="250"
-                  style={{ border: "none", borderRadius: "8px" }}
-                  allowFullScreen
-                  loading="lazy"
-                ></iframe>
-              </div>
-            )}
-          </div>
-        ) : askToScan ? (
-          <>
-            <button
-              className="scan-btn"
-              onClick={() => setScanning(true)}
-              disabled={scanning}
-            >
-              Start QR Scan
-            </button>
-
-            {scanning && (
-              <div
-                style={{ marginTop: "1rem", width: "100%", maxWidth: "400px" }}
-              >
-                <QrScanner
-                  delay={300}
-                  style={{ width: "100%" }}
-                  onError={handleError}
-                  onScan={handleScan}
-                />
-              </div>
-            )}
-
-            {message && <p className="scan-message">{message}</p>}
-          </>
-        ) : (
-          <button className="scan-btn" onClick={() => setAskToScan(true)}>
-            Do you want to scan a QR code?
+          <button
+            className="scan-btn"
+            onClick={() => setScanning(true)}
+            disabled={scanning}
+          >
+            Start QR Scan
           </button>
+
+          {scanning && (
+            <div
+              style={{ marginTop: "1rem", width: "100%", maxWidth: "400px" }}
+            >
+              <QrScanner
+                delay={300}
+                style={{ width: "100%" }}
+                onError={(err) => {
+                  console.error("QR Scan error:", err);
+                  setScanning(false);
+                }}
+                onScan={handleScan}
+              />
+            </div>
+          )}
+
+          {message && <p className="scan-message">{message}</p>}
+        </div>
+
+        {devices.length > 0 && (
+          <div className="dashboard-cards">
+            {devices.map((device) => (
+              <div key={device.code} className="dashboard-card light-card">
+                <h3 className="card-title">Device Info</h3>
+                <p>
+                  <strong>Device Code:</strong> {device.code}
+                </p>
+                <p>
+                  <strong>Device Name:</strong> {device.name}
+                </p>
+                <p>
+                  <strong>Assigned To:</strong> {user.username}
+                </p>
+                <p>
+                  <strong>Email:</strong> {user.email}
+                </p>
+                {device.location?.latitude && device.location?.longitude && (
+                  <p>
+                    <strong>Scanned Location:</strong> Lat{" "}
+                    {device.location.latitude}, Lng {device.location.longitude}
+                  </p>
+                )}
+                {device.assignedAt && (
+                  <p>
+                    <strong>Scanned At:</strong>{" "}
+                    {new Date(device.assignedAt).toLocaleString()}
+                  </p>
+                )}
+                {device.address && (
+                  <p>
+                    <strong>📍 Address:</strong> {device.address}
+                  </p>
+                )}
+                {device.location?.latitude && device.location?.longitude && (
+                  <iframe
+                    title="Device Location Map"
+                    src={`https://www.google.com/maps?q=${device.location.latitude},${device.location.longitude}&z=15&output=embed`}
+                    width="100%"
+                    height="250"
+                    style={{ border: "none", borderRadius: "8px" }}
+                    allowFullScreen
+                    loading="lazy"
+                  ></iframe>
+                )}
+              </div>
+            ))}
+          </div>
         )}
       </div>
     </div>
