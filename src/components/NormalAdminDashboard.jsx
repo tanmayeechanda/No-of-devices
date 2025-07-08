@@ -8,7 +8,8 @@ const NormalAdminDashboard = () => {
   const [generatedDevices, setGeneratedDevices] = useState([]);
   const [loading, setLoading] = useState(false);
   const { user, logout } = useAuth();
-  const canvasRefs = useRef({});
+
+  const canvasRefs = useRef({}); // Store refs for each QR code canvas
 
   const handleGenerateDevices = async (e) => {
     e.preventDefault();
@@ -50,7 +51,11 @@ const NormalAdminDashboard = () => {
   };
 
   const handleDownloadQR = (code) => {
-    const canvas = canvasRefs.current[code];
+    const canvas = canvasRefs.current[code]?.querySelector("canvas");
+    if (!canvas) {
+      alert("QR code not found");
+      return;
+    }
     const url = canvas.toDataURL("image/png");
     const link = document.createElement("a");
     link.href = url;
@@ -62,7 +67,7 @@ const NormalAdminDashboard = () => {
     <div className="dashboard">
       <header className="dashboard-header">
         <div className="header-content">
-          <h1>🧑‍💼Admin Dashboard</h1>
+          <h1>🧑‍💼 Admin Dashboard</h1>
           <div className="user-info">
             <span>{user.username}</span>
             <button onClick={logout} className="logout-btn">
@@ -111,25 +116,25 @@ const NormalAdminDashboard = () => {
                     <code>{device.code}</code>
                   </div>
 
-                  <div className="qr-code-section">
+                  <div
+                    className="qr-code-container"
+                    ref={(el) => (canvasRefs.current[device.code] = el)}
+                  >
                     <label>QR Code:</label>
-                    <div className="qr-code-container">
-                      <QRCode
-                        value={device.code}
-                        size={100}
-                        level="M"
-                        includeMargin={true}
-                        renderAs="canvas"
-                        ref={(el) => (canvasRefs.current[device.code] = el)}
-                      />
-                    </div>
-                    <button
-                      onClick={() => handleDownloadQR(device.code)}
-                      className="download-btn"
-                    >
-                      Download QR
-                    </button>
+                    <QRCode
+                      value={device.code}
+                      size={100}
+                      level="M"
+                      includeMargin={true}
+                    />
                   </div>
+
+                  <button
+                    className="download-btn"
+                    onClick={() => handleDownloadQR(device.code)}
+                  >
+                    📥 Download QR
+                  </button>
 
                   <div className="device-info">
                     <small>
