@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import QrScanner from "react-qr-scanner";
+import { Html5Qrcode } from "html5-qrcode";
 import axios from "axios";
 import "./Dashboard.css";
-import { Html5Qrcode } from "html5-qrcode";
 
 const UserDashboard = () => {
   const { user, logout } = useAuth();
@@ -48,7 +48,6 @@ const UserDashboard = () => {
   };
 
   const assignDevice = async (code) => {
-    // Prevent assigning the same code twice
     if (devices.some((d) => d.code === code)) {
       setMessage("⚠️ Device already assigned.");
       return;
@@ -105,20 +104,25 @@ const UserDashboard = () => {
     }
   };
 
-  const handleFileUpload = (e) => {
+  const handleFileUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const result = event.target.result?.trim();
-      if (result) assignDevice(result);
-      else setMessage("❌ File is empty or unreadable");
-    };
-    reader.onerror = () => {
-      setMessage("❌ Failed to read the file");
-    };
-    reader.readAsText(file);
+    const qrScanner = new Html5Qrcode("qr-reader-temp");
+    try {
+      const result = await qrScanner.scanFile(file, true); // true for verbose
+      if (result) {
+        assignDevice(result.trim());
+        setMessage("✅ QR code successfully read from file!");
+      } else {
+        setMessage("❌ QR code not found in image.");
+      }
+    } catch (error) {
+      console.error("QR scan from file failed:", error);
+      setMessage("❌ Failed to read QR code from the image.");
+    } finally {
+      qrScanner.clear();
+    }
   };
 
   const handleManualSubmit = () => {
@@ -151,6 +155,7 @@ const UserDashboard = () => {
       </div>
 
       <div className="dashboard-cards three-columns">
+        {/* QR Camera Scanner */}
         <div className="dashboard-card-assign">
           <button
             className="scan-btn"
@@ -176,6 +181,7 @@ const UserDashboard = () => {
           )}
         </div>
 
+        {/* File Upload Scanner */}
         <div className="dashboard-card-assign">
           <label htmlFor="fileUpload" className="scan-btn">
             Choose File
@@ -183,13 +189,14 @@ const UserDashboard = () => {
           <input
             id="fileUpload"
             type="file"
-            accept="*"
+            accept="image/png, image/jpeg"
             onChange={handleFileUpload}
             style={{ display: "none" }}
             disabled={loading}
           />
         </div>
 
+        {/* Manual Code Input */}
         <div className="dashboard-card-assign">
           <button
             onClick={handleManualSubmit}
@@ -198,7 +205,6 @@ const UserDashboard = () => {
           >
             Assign by code
           </button>
-
           <input
             type="text"
             className="form-group-input"
@@ -214,6 +220,7 @@ const UserDashboard = () => {
       {loading && <p className="scan-message">⏳ Assigning device...</p>}
       {message && <p className="scan-message">{message}</p>}
 
+      {/* Device Display */}
       {devices.length > 0 && (
         <div className="device-list">
           {devices.map((device, idx) => (
@@ -267,6 +274,9 @@ const UserDashboard = () => {
           ))}
         </div>
       )}
+
+      {/* Hidden div for html5-qrcode image scanning */}
+      <div id="qr-reader-temp" style={{ display: "none" }}></div>
     </div>
   );
 };
