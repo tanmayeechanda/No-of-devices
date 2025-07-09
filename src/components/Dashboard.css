@@ -364,7 +364,7 @@ tr:hover {
   background: white;
   border-radius: 6px;
   border: 1px solid #e2e8f0;
-  min-height: 200px;
+  min-height: 150px;
 }
 
 .device-info {
