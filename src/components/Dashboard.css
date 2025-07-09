@@ -373,6 +373,10 @@ tr:hover {
   height: 170px;
   width: 170px;
 }
+.qr-code-container canvas {
+  height: 150px;
+  width: 150px;
+}
 
 .download-btn {
   margin: 0.5rem 0;
