@@ -157,6 +157,7 @@ const UserDashboard = () => {
       <div className="dashboard-cards three-columns">
         {/* QR Camera Scanner */}
         <div className="dashboard-card-assign">
+          <p>Do You want to Scan a QR?</p>
           <button
             className="scan-btn"
             onClick={() => setScanning(true)}
