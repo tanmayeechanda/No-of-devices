@@ -3,6 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import QrScanner from "react-qr-scanner";
 import axios from "axios";
 import "./Dashboard.css";
+import { Html5Qrcode } from "html5-qrcode";
 
 const UserDashboard = () => {
   const { user, logout } = useAuth();
