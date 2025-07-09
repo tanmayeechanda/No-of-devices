@@ -466,6 +466,11 @@ tr:hover {
   flex-grow: 1;
   flex-basis: 280px;
 }
+
+.dashboard-card-assign.form-group-input {
+  padding-top: 2rem;
+}
+
 .dashboard-card {
   background-color: #f9e7ce;
   border-radius: 10px;
