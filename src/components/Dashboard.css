@@ -495,7 +495,6 @@ tr:hover {
   border: none;
   font-size: 1rem;
   cursor: pointer;
-  margin-top: 2rem;
 }
 
 .scan-btn:hover {
@@ -522,7 +521,7 @@ tr:hover {
 .download-btn {
   margin-top: 0.5rem;
   padding: 5px 10px;
-  background-color: #4caf50;
+  background-color: #9c5d27;
   color: white;
   border: none;
   border-radius: 6px;
