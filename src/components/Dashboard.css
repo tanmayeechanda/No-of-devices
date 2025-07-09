@@ -349,8 +349,9 @@ tr:hover {
 .qr-code-section {
   display: flex;
   flex-direction: column;
-  align-items: center; /* center all child elements horizontally */
+  align-items: center;
   margin-bottom: 1rem;
+  text-align: center;
 }
 
 .qr-code-section label {
@@ -358,16 +359,17 @@ tr:hover {
   color: #2d3748;
   font-weight: 500;
   font-size: 1rem;
-  text-align: center;
 }
 
 .qr-code-container {
-  display: inline-block;
   padding: 0.5rem;
   background: white;
   border-radius: 6px;
   border: 1px solid #e2e8f0;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.8rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .download-btn {
