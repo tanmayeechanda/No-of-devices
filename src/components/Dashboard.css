@@ -276,7 +276,7 @@ tr:hover {
 
 /* Generated Devices */
 .generated-devices {
-  min-width: 550px;
+  min-width: 1050px;
   background: rgba(255, 240, 220, 0.95);
   padding: 2rem;
   border-radius: 8px;
