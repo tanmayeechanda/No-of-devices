@@ -348,7 +348,7 @@ tr:hover {
 .qr-code-section {
   margin-bottom: 1rem;
   text-align: center;
-  height: 100;
+  height: 15px;
 }
 
 .qr-code-section label {
