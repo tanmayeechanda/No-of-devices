@@ -464,7 +464,7 @@ tr:hover {
   padding-left: 4rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
   flex-grow: 1;
-  flex-wrap: wrap;
+  flex-basis: 280px;
 }
 .dashboard-card {
   background-color: #f9e7ce;
@@ -499,7 +499,6 @@ tr:hover {
 }
 
 .scan-btn {
-  padding-top: 4rem;
   background-color: #9c5d27;
   color: white;
   padding: 0.8rem 1.5rem;
