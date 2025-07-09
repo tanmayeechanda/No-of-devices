@@ -300,6 +300,7 @@ tr:hover {
   border-radius: 8px;
   padding: 1.5rem;
   background-color: #edd4b6;
+  height: 150px;
 }
 
 .device-header {
