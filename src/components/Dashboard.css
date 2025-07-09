@@ -54,9 +54,8 @@
 .dashboard-content {
   max-width: 1000px;
   margin: 0 auto;
-  padding: 2rem;
-  display: flex;
-  align-items: flex-start;
+
+  align-items: center;
 }
 
 .loading {
