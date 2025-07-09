@@ -288,7 +288,7 @@ tr:hover {
 }
 
 .devices-grid {
-  max-width: 1000px;
+  min-width: 650px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1rem;
