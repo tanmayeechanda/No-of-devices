@@ -52,11 +52,11 @@
 }
 
 .dashboard-content {
-  max-width: auto;
+  max-width: 1100px;
   margin: 0 auto;
   padding: 2rem;
-  display: flex;
-  align-items: flex-start;
+
+  align-items: center;
 }
 
 .loading {
@@ -207,7 +207,6 @@ tr:hover {
 
 /* Device Generator */
 .device-generator {
-  min-width: 1200px;
   background: rgba(255, 240, 220, 0.95);
   padding: 2rem;
   border-radius: 8px;
@@ -289,10 +288,9 @@ tr:hover {
 }
 
 .devices-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: start;
-  gap: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
 }
 
 .device-card {
@@ -300,8 +298,6 @@ tr:hover {
   border-radius: 8px;
   padding: 1.5rem;
   background-color: #edd4b6;
-  width: 300px; /* Fixed width to maintain card size */
-  box-sizing: border-box;
 }
 
 .device-header {
@@ -448,18 +444,13 @@ tr:hover {
     text-align: center;
   }
 }
+
 .dashboard-cards {
   display: flex;
-  flex-direction: column; /* stack vertically */
   justify-content: center;
-  align-items: center;
   gap: 2rem;
+  flex-wrap: wrap;
   margin-top: 2rem;
-}
-.dashboard-card,
-.generated-devices {
-  width: 90%;
-  max-width: 1000px;
 }
 
 .dashboard-cards.three-columns {
@@ -554,4 +545,4 @@ tr:hover {
 
 .download-btn:hover {
   background-color: #7a4b20;
-}
+} fix my CSS according to the code
