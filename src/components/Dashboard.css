@@ -467,8 +467,8 @@ tr:hover {
   flex-basis: 280px;
 }
 
-.dashboard-card-assign.form-group-input {
-  padding-top: 2rem;
+.dashboard-card-assign.scan-btn {
+  margin-bottom: 2rem;
 }
 
 .dashboard-card {
