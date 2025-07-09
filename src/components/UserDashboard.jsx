@@ -157,7 +157,7 @@ const UserDashboard = () => {
       <div className="dashboard-cards three-columns">
         {/* QR Camera Scanner */}
         <div className="dashboard-card-assign">
-          <p>Do You want to Scan a QR?</p>
+          <p>Get your QR by scanning it.</p>
           <button
             className="scan-btn"
             onClick={() => setScanning(true)}
@@ -184,7 +184,7 @@ const UserDashboard = () => {
 
         {/* File Upload Scanner */}
         <div className="dashboard-card-assign">
-          <p>get your QR by Scanning a file</p>
+          <p>Get Your QR by Scanning a file</p>
           <label htmlFor="fileUpload" className="scan-btn">
             Choose File
           </label>
