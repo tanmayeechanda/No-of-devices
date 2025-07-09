@@ -494,6 +494,9 @@ tr:hover {
   flex-grow: 1;
   flex-basis: 280px;
 }
+.dashboard-card-assign.form-group-input {
+  width: 60%;
+}
 
 .card-title {
   font-size: 1.2rem;
