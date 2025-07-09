@@ -380,7 +380,7 @@ tr:hover {
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 0.9rem;
+  max-width: 2rem;
 }
 
 .download-btn:hover {
