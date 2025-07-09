@@ -291,7 +291,7 @@ tr:hover {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(309px, 1fr));
   gap: 1.5rem;
-  height: 150px;
+  min-height: 300px;
 }
 
 .device-card {
