@@ -232,11 +232,11 @@ tr:hover {
 .form-group input {
   width: 100%;
   padding: 0.8rem;
-  color: black;
+  color: rgb(255, 255, 255);
   border-radius: 6px;
   font-size: 1rem;
   background-color: rgb(235, 222, 199);
-  border: 2px solid bisque;
+  border: 2px solid rgb(255, 221, 179);
 }
 
 .form-group input:focus {
