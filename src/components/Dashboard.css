@@ -495,7 +495,13 @@ tr:hover {
   flex-basis: 280px;
 }
 .form-group-inputs {
-  background-color: white;
+  color: black;
+  background-color: rgb(235, 222, 199);
+  border: 2px solid bisque;
+  padding: 0.8rem;
+
+  border-radius: 6px;
+  font-size: 1rem;
 }
 
 .card-title {
