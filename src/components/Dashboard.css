@@ -494,7 +494,7 @@ tr:hover {
   flex-grow: 1;
   flex-basis: 280px;
 }
-.dashboard-card-assign.form-group-input {
+.form-group-inputs {
   width: 60%;
 }
 
