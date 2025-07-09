@@ -346,19 +346,17 @@ tr:hover {
   display: block;
   word-break: break-all;
 }
-
-.qr-code-section {
-  margin-bottom: 1rem;
-  text-align: center;
-  height: 100;
-}
-
 .qr-code-section label {
   display: block;
   margin-bottom: 0.5rem;
   color: #2d3748;
   font-weight: 500;
   font-size: 0.9rem;
+}
+.qr-code-section {
+  margin-bottom: 1rem;
+  text-align: center;
+  height: 100;
 }
 
 .qr-code-container {
