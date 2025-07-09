@@ -115,12 +115,11 @@ const NormalAdminDashboard = () => {
                     <label>Code:</label>
                     <code>{device.code}</code>
                   </div>
-
+                  <label>QR Code:</label>
                   <div
                     className="qr-code-container"
                     ref={(el) => (canvasRefs.current[device.code] = el)}
                   >
-                    <label>QR Code:</label>
                     <QRCode
                       value={device.code}
                       size={100}
