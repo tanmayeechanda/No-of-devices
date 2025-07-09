@@ -190,6 +190,14 @@ const UserDashboard = () => {
         </div>
 
         <div className="dashboard-card">
+          <button
+            onClick={handleManualSubmit}
+            className="scan-btn"
+            disabled={loading}
+          >
+            Assign by code
+          </button>
+
           <input
             type="text"
             className="form-group-input"
@@ -199,13 +207,6 @@ const UserDashboard = () => {
             style={{ marginBottom: "1rem", padding: "0.5rem", width: "100%" }}
             disabled={loading}
           />
-          <button
-            onClick={handleManualSubmit}
-            className="scan-btn"
-            disabled={loading}
-          >
-            Assign by code
-          </button>
         </div>
       </div>
 
