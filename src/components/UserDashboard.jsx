@@ -182,7 +182,7 @@ const UserDashboard = () => {
           <input
             id="fileUpload"
             type="file"
-            accept=".txt"
+            accept="*"
             onChange={handleFileUpload}
             style={{ display: "none" }}
             disabled={loading}
