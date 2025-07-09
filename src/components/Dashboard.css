@@ -497,7 +497,7 @@ tr:hover {
 .form-group-inputs {
   color: black;
   background-color: rgb(235, 222, 199);
-  border: 2px solid bisque;
+  border: 2px solid rgb(172, 151, 125);
   padding: 0.8rem;
   border-radius: 6px;
   font-size: 1rem;
