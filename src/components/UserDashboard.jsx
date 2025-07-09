@@ -211,7 +211,7 @@ const UserDashboard = () => {
             value={manualCode}
             onChange={(e) => setManualCode(e.target.value)}
             placeholder="Enter the 16-digit code"
-            style={{ marginBottom: "1rem", padding: "0.5rem", width: "100%" }}
+            style={{ marginBottom: "1rem", padding: "0.5rem", width: "80%" }}
             disabled={loading}
           />
         </div>
