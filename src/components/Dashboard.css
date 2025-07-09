@@ -289,7 +289,7 @@ tr:hover {
 
 .devices-grid {
   display: grid;
-  min-height: 200px;
+
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1rem;
 }
