@@ -456,7 +456,9 @@ tr:hover {
 .dashboard-cards.three-columns {
   flex-wrap: wrap;
 }
-
+.dashboard-cards-columns {
+  flex-wrap: wrap;
+}
 .dashboard-card {
   background-color: #f9e7ce;
   border-radius: 10px;
