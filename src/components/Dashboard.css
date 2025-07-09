@@ -488,7 +488,7 @@ tr:hover {
 
 .dashboard-card-assign {
   background-color: #f9e7ce;
-  border-radius: 10px;
+
   padding: 2rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
   flex-grow: 1;
