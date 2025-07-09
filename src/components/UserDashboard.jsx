@@ -207,7 +207,7 @@ const UserDashboard = () => {
           </button>
           <input
             type="text"
-            className="form-group-input"
+            className="form-group-inputs"
             value={manualCode}
             onChange={(e) => setManualCode(e.target.value)}
             placeholder="Enter the 16-digit code"
