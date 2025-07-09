@@ -381,9 +381,6 @@ tr:hover {
   border-radius: 6px;
   cursor: pointer;
   max-width: 250px;
-  display: block;
-  justify-content: center;
-  align-items: center;
 }
 
 .download-btn:hover {
