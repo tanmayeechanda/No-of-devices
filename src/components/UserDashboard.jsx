@@ -184,7 +184,7 @@ const UserDashboard = () => {
 
         {/* File Upload Scanner */}
         <div className="dashboard-card-assign">
-          <h2>Get Your QR by Scanning </h2>
+          <p>Get Your QR by Scanning a file</p>
           <button htmlFor="fileUpload" className="scan-btn">
             Choose File
           </button>
