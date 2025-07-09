@@ -363,8 +363,8 @@ tr:hover {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 170px;
-  width: 170px;
+  height: 190px;
+  width: 190px;
 }
 
 .qr-code-container canvas {
