@@ -495,7 +495,7 @@ tr:hover {
   flex-basis: 280px;
 }
 .form-group-inputs {
-  width: 60%;
+  background-color: white;
 }
 
 .card-title {
