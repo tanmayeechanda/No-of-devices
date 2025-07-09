@@ -52,11 +52,11 @@
 }
 
 .dashboard-content {
-  max-width: 1100px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 2rem;
-
-  align-items: center;
+  display: flex;
+  align-items: flex-start;
 }
 
 .loading {
@@ -289,7 +289,6 @@ tr:hover {
 
 .devices-grid {
   display: grid;
-
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1rem;
 }
@@ -348,6 +347,7 @@ tr:hover {
 .qr-code-section {
   margin-bottom: 1rem;
   text-align: center;
+  height: 100;
 }
 
 .qr-code-section label {
@@ -364,7 +364,6 @@ tr:hover {
   background: white;
   border-radius: 6px;
   border: 1px solid #e2e8f0;
-  min-height: 100px;
 }
 
 .device-info {
