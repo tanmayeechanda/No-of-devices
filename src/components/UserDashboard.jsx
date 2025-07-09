@@ -184,7 +184,7 @@ const UserDashboard = () => {
 
         {/* File Upload Scanner */}
         <div className="dashboard-card-assign">
-          <p>To scan the qr using files</p>
+          <p>get your QR by Scanning a file</p>
           <label htmlFor="fileUpload" className="scan-btn">
             Choose File
           </label>
@@ -200,13 +200,6 @@ const UserDashboard = () => {
 
         {/* Manual Code Input */}
         <div className="dashboard-card-assign">
-          <button
-            onClick={handleManualSubmit}
-            className="scan-btn"
-            disabled={loading}
-          >
-            Get your QR by code
-          </button>
           <input
             type="text"
             className="form-group-inputs"
@@ -216,6 +209,13 @@ const UserDashboard = () => {
             style={{ marginBottom: "1rem", padding: "0.5rem", width: "80%" }}
             disabled={loading}
           />
+          <button
+            onClick={handleManualSubmit}
+            className="scan-btn"
+            disabled={loading}
+          >
+            Get your QR by code
+          </button>
         </div>
       </div>
 
