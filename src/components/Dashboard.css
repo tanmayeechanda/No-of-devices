@@ -346,17 +346,19 @@ tr:hover {
   display: block;
   word-break: break-all;
 }
+.qr-code-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* center all child elements horizontally */
+  margin-bottom: 1rem;
+}
+
 .qr-code-section label {
-  display: block;
   margin-bottom: 0.5rem;
   color: #2d3748;
   font-weight: 500;
-  font-size: 0.9rem;
-}
-.qr-code-section {
-  margin-bottom: 1rem;
+  font-size: 1rem;
   text-align: center;
-  height: 100;
 }
 
 .qr-code-container {
@@ -365,11 +367,27 @@ tr:hover {
   background: white;
   border-radius: 6px;
   border: 1px solid #e2e8f0;
+  margin-bottom: 0.5rem;
+}
+
+.download-btn {
+  margin: 0.5rem 0;
+  padding: 8px 14px;
+  background-color: #9c5d27;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.download-btn:hover {
+  background-color: #7a4b20;
 }
 
 .device-info {
-  color: #718096;
   font-size: 0.8rem;
+  color: #718096;
   text-align: center;
 }
 
