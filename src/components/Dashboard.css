@@ -450,10 +450,16 @@ tr:hover {
 
 .dashboard-cards {
   display: flex;
+  flex-direction: column; /* stack vertically */
   justify-content: center;
+  align-items: center;
   gap: 2rem;
-  flex-wrap: wrap;
   margin-top: 2rem;
+}
+.dashboard-card,
+.generated-devices {
+  width: 90%;
+  max-width: 1000px;
 }
 
 .dashboard-cards.three-columns {
