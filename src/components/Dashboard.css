@@ -289,12 +289,12 @@ tr:hover {
 
 .devices-grid {
   display: grid;
+  min-height: 200px;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1rem;
 }
 
 .device-card {
-  min-height: 200px;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
   padding: 1.5rem;
