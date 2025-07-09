@@ -149,7 +149,7 @@ const UserDashboard = () => {
         </div>
       </div>
 
-      <div className="dashboard-cards-columns">
+      <div className="dashboard-cards three-columns">
         <div className="dashboard-card-assign">
           <button
             className="scan-btn"
