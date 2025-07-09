@@ -207,6 +207,7 @@ tr:hover {
 
 /* Device Generator */
 .device-generator {
+  min-width: 1200px;
   background: rgba(255, 240, 220, 0.95);
   padding: 2rem;
   border-radius: 8px;
@@ -447,7 +448,6 @@ tr:hover {
     text-align: center;
   }
 }
-
 .dashboard-cards {
   display: flex;
   flex-direction: column; /* stack vertically */
