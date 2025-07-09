@@ -205,7 +205,7 @@ const UserDashboard = () => {
             className="scan-btn"
             disabled={loading}
           >
-            Assign by code
+            Get your QR by code
           </button>
           <input
             type="text"
