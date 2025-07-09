@@ -474,6 +474,7 @@ tr:hover {
 }
 
 .qr-container {
+  padding-left: 6rem;
   display: flex;
   justify-content: center;
   align-items: center;
