@@ -150,7 +150,7 @@ const UserDashboard = () => {
       </div>
 
       <div className="dashboard-cards three-columns">
-        <div className="dashboard-card">
+        <div className="dashboard-card-assign">
           <button
             className="scan-btn"
             onClick={() => setScanning(true)}
@@ -175,7 +175,7 @@ const UserDashboard = () => {
           )}
         </div>
 
-        <div className="dashboard-card">
+        <div className="dashboard-card-assign">
           <label htmlFor="fileUpload" className="scan-btn">
             Choose File
           </label>
@@ -189,7 +189,7 @@ const UserDashboard = () => {
           />
         </div>
 
-        <div className="dashboard-card">
+        <div className="dashboard-card-assign">
           <button
             onClick={handleManualSubmit}
             className="scan-btn"
