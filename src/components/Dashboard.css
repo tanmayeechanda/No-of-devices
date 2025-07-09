@@ -460,7 +460,8 @@ tr:hover {
 .dashboard-card {
   background-color: #f9e7ce;
   border-radius: 10px;
-  padding: 4rem;
+  padding: 2rem;
+  padding-left: 4rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
   flex-grow: 1;
   flex-basis: 280px;
