@@ -52,7 +52,7 @@
 }
 
 .dashboard-content {
-  max-width: 1000px;
+  max-width: auto;
   margin: 0 auto;
   padding: 2rem;
   display: flex;
