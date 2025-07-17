@@ -4,7 +4,7 @@ import User from "../models/User.js";
 
 const router = express.Router();
 
-// Register
+// Register route
 router.post("/register", async (req, res) => {
   try {
     const { username, email, password, role } = req.body;
@@ -40,7 +40,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// Login
+// Login route with fallback plain-text password check
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -50,7 +50,19 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    const isMatch = await user.comparePassword(password);
+    let isMatch = false;
+
+    try {
+      isMatch = await user.comparePassword(password);
+    } catch (err) {
+      isMatch = false;
+    }
+
+    // 🔁 Fallback to plain-text password match (for old users)
+    if (!isMatch && user.password === password) {
+      isMatch = true;
+    }
+
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
