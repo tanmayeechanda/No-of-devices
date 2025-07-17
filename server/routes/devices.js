@@ -156,5 +156,49 @@ router.get(
     }
   }
 );
+/**
+ * 🌐 Manually Update Device Location [User]
+ * Use this from Postman to update a device's location
+ */
+router.patch(
+  "/update-location",
+  authenticateToken,
+  requireRole(["user"]),
+  async (req, res) => {
+    const { code, location, address } = req.body;
+
+    if (!code || !location?.latitude || !location?.longitude) {
+      return res.status(400).json({ message: "Incomplete location data." });
+    }
+
+    try {
+      const device = await Device.findOne({
+        code,
+        assignedTo: req.user.userId, // ensures only your own device can be updated
+      });
+
+      if (!device) {
+        return res
+          .status(404)
+          .json({ message: "Device not found or not assigned to you." });
+      }
+
+      device.location = location;
+      if (address) {
+        device.address = address;
+      }
+
+      await device.save();
+
+      res.status(200).json({
+        message: "Location updated successfully.",
+        device,
+      });
+    } catch (error) {
+      console.error("Error updating location:", error);
+      res.status(500).json({ message: "Failed to update location." });
+    }
+  }
+);
 
 export default router;
