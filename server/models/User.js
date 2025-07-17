@@ -38,9 +38,17 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-// ✅ Method to compare passwords
 userSchema.methods.comparePassword = async function (candidatePassword) {
-  return await bcrypt.compare(candidatePassword, this.password);
+  try {
+    // Check hashed match first
+    const isMatch = await bcrypt.compare(candidatePassword, this.password);
+    if (isMatch) return true;
+
+    // If hashed check fails, check plain text fallback
+    return candidatePassword === this.password;
+  } catch (err) {
+    return false;
+  }
 };
 
 export default mongoose.model("User", userSchema);
