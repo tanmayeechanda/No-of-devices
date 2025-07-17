@@ -2,7 +2,6 @@ import express from "express";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
-const process = { env: {} };
 const router = express.Router();
 
 // Register
