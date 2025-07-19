@@ -188,7 +188,7 @@ const UserDashboard = () => {
           <p>Get your QR by scanning a file.</p>
           <label
             htmlFor="fileUpload"
-            className="scan-btn"
+            className="scan-btns"
             style={{ cursor: "pointer" }}
           >
             Choose File
