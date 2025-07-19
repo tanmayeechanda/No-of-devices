@@ -216,7 +216,7 @@ const UserDashboard = () => {
           />
           <button
             onClick={handleManualSubmit}
-            className="scans-btn"
+            className="scan-btnss"
             disabled={loading}
           >
             Get your QR by code
