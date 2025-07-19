@@ -148,9 +148,12 @@ const UserDashboard = () => {
 
       <div className="welcome-section">
         <div className="welcome-card">
-          <p>
-            Welcome <strong>{user?.username}</strong> to Addwise Tech’s
-            role-based device generation system
+          <p style={{ fontSize: "1.1rem", lineHeight: "1.5" }}>
+            👋 Hello <strong>{user?.username}</strong>!<br />
+            Welcome to <strong>Addwise Tech</strong>'s smart device management
+            system. Use this dashboard to{" "}
+            <strong>scan, assign, and track your devices</strong> seamlessly.
+            Let’s get started! 🚀
           </p>
         </div>
       </div>
