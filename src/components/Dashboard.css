@@ -431,7 +431,6 @@ tr:hover {
 .welcome-card p {
   color: #718096;
   line-height: 1.6;
-  max-width: 600px;
 }
 
 @media (max-width: 768px) {
