@@ -527,7 +527,9 @@ tr:hover {
   border-radius: 6px;
   border: 2px solid #d2a679;
 }
-
+.dashboard-card-assign p {
+  margin-bottom: 4rem;
+}
 .scan-btn {
   margin-top: 2rem;
   margin-left: 2rem;
