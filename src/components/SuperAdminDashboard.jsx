@@ -164,6 +164,7 @@ const SuperAdminDashboard = () => {
                       <th>Code</th>
                       <th>Created By</th>
                       <th>Created</th>
+                      <th>Assigned</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
@@ -177,6 +178,19 @@ const SuperAdminDashboard = () => {
                         <td>{device.createdBy?.username || "Unknown"}</td>
                         <td>
                           {new Date(device.createdAt).toLocaleDateString()}
+                        </td>
+                        <td>
+                          {device.assignedTo ? (
+                            <span
+                              style={{ color: "green", fontWeight: "bold" }}
+                            >
+                              Yes
+                            </span>
+                          ) : (
+                            <span style={{ color: "red", fontWeight: "bold" }}>
+                              No
+                            </span>
+                          )}
                         </td>
                         <td>
                           <button
