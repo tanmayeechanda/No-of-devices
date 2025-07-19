@@ -149,7 +149,7 @@ const UserDashboard = () => {
       <div className="welcome-section">
         <div className="welcome-card">
           <p
-            style={{ fontSize: "1.5rem", lineHeight: "1.8", color: "#5c2525" }}
+            style={{ fontSize: "1.5rem", lineHeight: "1.4", color: "#5c2525" }}
           >
             👋 Hello <strong>{user?.username}</strong>!<br />
             Welcome to <strong>Addwise Tech</strong>'s smart device management
