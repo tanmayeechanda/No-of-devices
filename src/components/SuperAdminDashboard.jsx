@@ -207,7 +207,7 @@ const SuperAdminDashboard = () => {
                         <td>{device.createdBy?.username || "Unknown"}</td>
                         <td>
                           {device.assignedTo ? (
-                            <span style={{ color: "green" }}>✔️ Yes</span>
+                            <span style={{ color: "green" }}>✅ Yes</span>
                           ) : (
                             <span style={{ color: "red" }}>❌ No</span>
                           )}
