@@ -3,11 +3,12 @@ import { useAuth } from "../context/AuthContext";
 import "./Dashboard.css";
 
 const SuperAdminDashboard = () => {
+  const { user, logout } = useAuth();
   const [admins, setAdmins] = useState([]);
   const [devices, setDevices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("admins");
-  const { user, logout } = useAuth();
+  const [assignedFilter, setAssignedFilter] = useState("all");
 
   useEffect(() => {
     fetchData();
@@ -62,6 +63,12 @@ const SuperAdminDashboard = () => {
       console.error("Error deleting device:", error);
     }
   };
+
+  const filteredDevices = devices.filter((device) => {
+    if (assignedFilter === "assigned") return !!device.assignedTo;
+    if (assignedFilter === "unassigned") return !device.assignedTo;
+    return true;
+  });
 
   if (loading) return <div className="loading">Loading...</div>;
 
@@ -154,7 +161,24 @@ const SuperAdminDashboard = () => {
           {activeTab === "devices" && (
             <div className="data-table">
               <h2>All Devices</h2>
-              {devices.length === 0 ? (
+
+              {/* Filter Dropdown */}
+              <div style={{ marginBottom: "1rem" }}>
+                <label style={{ marginRight: "0.5rem", fontWeight: "bold" }}>
+                  Filter by Assignment:
+                </label>
+                <select
+                  value={assignedFilter}
+                  onChange={(e) => setAssignedFilter(e.target.value)}
+                  style={{ padding: "0.4rem" }}
+                >
+                  <option value="all">All</option>
+                  <option value="assigned">Assigned Only</option>
+                  <option value="unassigned">Unassigned Only</option>
+                </select>
+              </div>
+
+              {filteredDevices.length === 0 ? (
                 <p className="no-data">No devices found</p>
               ) : (
                 <table>
@@ -163,13 +187,13 @@ const SuperAdminDashboard = () => {
                       <th>Device Name</th>
                       <th>Code</th>
                       <th>Created By</th>
-                      <th>Created</th>
                       <th>Assigned</th>
+                      <th>Created</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {devices.map((device) => (
+                    {filteredDevices.map((device) => (
                       <tr key={device._id}>
                         <td>{device.name}</td>
                         <td>
@@ -177,20 +201,14 @@ const SuperAdminDashboard = () => {
                         </td>
                         <td>{device.createdBy?.username || "Unknown"}</td>
                         <td>
-                          {new Date(device.createdAt).toLocaleDateString()}
+                          {device.assignedTo ? (
+                            <span className="assigned">✅ Yes</span>
+                          ) : (
+                            <span className="unassigned">❌ No</span>
+                          )}
                         </td>
                         <td>
-                          {device.assignedTo ? (
-                            <span
-                              style={{ color: "green", fontWeight: "bold" }}
-                            >
-                              Yes
-                            </span>
-                          ) : (
-                            <span style={{ color: "red", fontWeight: "bold" }}>
-                              No
-                            </span>
-                          )}
+                          {new Date(device.createdAt).toLocaleDateString()}
                         </td>
                         <td>
                           <button
