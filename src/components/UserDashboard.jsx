@@ -110,7 +110,8 @@ const UserDashboard = () => {
 
     const qrScanner = new Html5Qrcode("qr-reader-temp");
     try {
-      const result = await qrScanner.scanFile(file, true); // true for verbose
+      setMessage("📁 Scanning QR from file...");
+      const result = await qrScanner.scanFile(file, true);
       if (result) {
         assignDevice(result.trim());
         setMessage("✅ QR code successfully read from file!");
@@ -182,12 +183,16 @@ const UserDashboard = () => {
           )}
         </div>
 
-        {/* File Upload Scanner */}
+        {/* File Upload Scanner (fixed) */}
         <div className="dashboard-card-assign">
-          <p>Get Your QR by Scanning a file</p>
-          <button htmlFor="fileUpload" className="scan-btn">
+          <p>Get your QR by scanning a file.</p>
+          <label
+            htmlFor="fileUpload"
+            className="scan-btn"
+            style={{ cursor: "pointer" }}
+          >
             Choose File
-          </button>
+          </label>
           <input
             id="fileUpload"
             type="file"
@@ -277,7 +282,7 @@ const UserDashboard = () => {
         </div>
       )}
 
-      {/* Hidden div for html5-qrcode image scanning */}
+      {/* Hidden div for html5-qrcode */}
       <div id="qr-reader-temp" style={{ display: "none" }}></div>
     </div>
   );
