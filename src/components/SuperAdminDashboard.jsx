@@ -3,16 +3,28 @@ import { useAuth } from "../context/AuthContext";
 import "./Dashboard.css";
 
 const SuperAdminDashboard = () => {
-  const { user, logout } = useAuth();
   const [admins, setAdmins] = useState([]);
   const [devices, setDevices] = useState([]);
+  const [filteredDevices, setFilteredDevices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("admins");
   const [assignedFilter, setAssignedFilter] = useState("all");
 
+  const { user, logout } = useAuth();
+
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (assignedFilter === "all") {
+      setFilteredDevices(devices);
+    } else if (assignedFilter === "assigned") {
+      setFilteredDevices(devices.filter((d) => d.assignedTo));
+    } else if (assignedFilter === "unassigned") {
+      setFilteredDevices(devices.filter((d) => !d.assignedTo));
+    }
+  }, [assignedFilter, devices]);
 
   const fetchData = async () => {
     try {
@@ -35,6 +47,7 @@ const SuperAdminDashboard = () => {
       if (devicesRes.ok) {
         const devicesData = await devicesRes.json();
         setDevices(devicesData);
+        setFilteredDevices(devicesData);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -63,12 +76,6 @@ const SuperAdminDashboard = () => {
       console.error("Error deleting device:", error);
     }
   };
-
-  const filteredDevices = devices.filter((device) => {
-    if (assignedFilter === "assigned") return !!device.assignedTo;
-    if (assignedFilter === "unassigned") return !device.assignedTo;
-    return true;
-  });
 
   if (loading) return <div className="loading">Loading...</div>;
 
@@ -160,22 +167,20 @@ const SuperAdminDashboard = () => {
 
           {activeTab === "devices" && (
             <div className="data-table">
-              <h2>All Devices</h2>
-
-              {/* Filter Dropdown */}
-              <div style={{ marginBottom: "1rem" }}>
-                <label style={{ marginRight: "0.5rem", fontWeight: "bold" }}>
-                  Filter by Assignment:
-                </label>
-                <select
-                  value={assignedFilter}
-                  onChange={(e) => setAssignedFilter(e.target.value)}
-                  style={{ padding: "0.4rem" }}
-                >
-                  <option value="all">All</option>
-                  <option value="assigned">Assigned Only</option>
-                  <option value="unassigned">Unassigned Only</option>
-                </select>
+              <div className="devices-header">
+                <h2>All Devices</h2>
+                <div className="filter-dropdown">
+                  <label htmlFor="assignmentFilter">Filter:</label>
+                  <select
+                    id="assignmentFilter"
+                    value={assignedFilter}
+                    onChange={(e) => setAssignedFilter(e.target.value)}
+                  >
+                    <option value="all">All</option>
+                    <option value="assigned">Assigned Only</option>
+                    <option value="unassigned">Unassigned Only</option>
+                  </select>
+                </div>
               </div>
 
               {filteredDevices.length === 0 ? (
@@ -202,9 +207,9 @@ const SuperAdminDashboard = () => {
                         <td>{device.createdBy?.username || "Unknown"}</td>
                         <td>
                           {device.assignedTo ? (
-                            <span className="assigned">✅ Yes</span>
+                            <span style={{ color: "green" }}>✔️ Yes</span>
                           ) : (
-                            <span className="unassigned">❌ No</span>
+                            <span style={{ color: "red" }}>❌ No</span>
                           )}
                         </td>
                         <td>
