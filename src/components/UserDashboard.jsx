@@ -152,8 +152,8 @@ const UserDashboard = () => {
             style={{ fontSize: "1.5rem", lineHeight: "1.4", color: "#5c2525" }}
           >
             👋 Hello <strong>{user?.username}</strong>!<br />
-            Welcome to <strong>Addwise Tech</strong>'s smart device management
-            system. Use this dashboard to{" "}
+            Welcome to <strong>Addwise Tech</strong>'s device management system.
+            Use this dashboard to{" "}
             <strong>scan, assign, and track your devices</strong> seamlessly.
             Let’s get started! 🚀
           </p>
