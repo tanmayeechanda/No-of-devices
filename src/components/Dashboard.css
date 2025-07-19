@@ -565,7 +565,7 @@ tr:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #f5e2cf; /* light brown background */
+  /* light brown background */
   padding: 0.75rem 1rem;
   border-radius: 8px;
   margin-bottom: 1rem;
