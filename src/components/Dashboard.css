@@ -561,3 +561,31 @@ tr:hover {
     width: 90%;
   }
 }
+.devices-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f5e2cf; /* light brown background */
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.filter-dropdown {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: bold;
+  color: #5a3b1f;
+}
+
+.filter-dropdown select {
+  padding: 0.4rem 0.75rem;
+  border: 1px solid #d9b99b;
+  background-color: #f7d9b9;
+  color: #4a2c14;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
