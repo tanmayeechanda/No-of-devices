@@ -160,7 +160,7 @@ const UserDashboard = () => {
         <div className="dashboard-card-assign">
           <p>Get your QR by scanning it.</p>
           <button
-            className="scan-btn"
+            className="scans-btn"
             onClick={() => setScanning(true)}
             disabled={scanning || loading}
           >
